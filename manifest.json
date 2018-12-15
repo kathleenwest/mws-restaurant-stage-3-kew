@@ -4,7 +4,7 @@
   "icons": [
     { "src": "icons/icon-1x.png", "type": "image/png", "sizes": "48x48" },
     { "src": "icons/icon-2x.png", "type": "image/png", "sizes": "96x96" },
-    { "src": "icons/icon-4x.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "icons/icon-4x.png", "type": "image/png", "sizes": "128x128" },
     { "src": "icons/icon-10x.png", "type": "image/png", "sizes": "512x512" }
   ],
   "start_url": "index.html",
