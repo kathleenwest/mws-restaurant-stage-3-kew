@@ -30,10 +30,8 @@ const idbPromise = idb.open(IDB_NAME, 3, upgradeDB => {
         .createObjectStore(REVIEWS, { keyPath: "id" })
         .createIndex("restaurant_id", "restaurant_id");
     case 2:
-      upgradeDB.createObjectStore("pending", {
-        keyPath: "id",
-        autoIncrement: true
-      });
+      upgradeDB
+      .createObjectStore("pending", { keyPath: "id", autoIncrement: true });
   }
 }); // end of function
 
@@ -54,13 +52,14 @@ self.addEventListener("install", function(event) {
       "/",
       "index.html",
       "restaurant.html",
+      "favicon.ico",
       "/css/main.css",
       "/css/responsive.css",
       "/js/dbhelper.js",
       "/js/main.js",
       "/js/idbhelper.js",
       "/js/restaurant_info.js",
-      "/img/*",
+      "/img/",
       "/js/idb.js",
       "/js/review.js",
       "/js/register.js"
@@ -153,7 +152,16 @@ function(event)
       
         // Not Found in Cache, Fetching from Internet
         else 
-        {        
+        { 
+          // Check to see if online first
+          if (!navigator.onLine) {
+            // Cannot access the internet
+            // Return custom response
+            var init = { "status" : 500 , "statusText" : "Offline" };
+            const customresponse = new Response(null,init);
+            return customresponse;
+          } // end of if
+          
           return fetch(event.request).then
           (
             // Add to Cache  
@@ -244,16 +252,17 @@ const getFavoriteRestaurant = event => {
 // Get All Restaurants
 // First Try IndexedDB, then Fetch
 const getRestaurants = event => {
+  
   event.respondWith(
     getRestaurantsIDB().then(data => {
       // See if data was returned.
       if (data.length > 0) {
         return new Response(JSON.stringify(data));
       } // end of if
-
+      
       // No data in IndexedDB, Fetch and then Cache
-      return fetchAndCacheRestaurants(event).then(json => {
-        return new Response(JSON.stringify(json));
+      return fetchAndCacheRestaurants(event).then(newdata => {
+        return new Response(JSON.stringify(newdata));
       });
     })
   );
@@ -270,9 +279,11 @@ const getRestaurantById = (event, id) => {
       } // end of if
 
       // No data in IndexedDB, Fetch and then Cache
-      return fetchAndCacheRestaurants(event).then(json => {
-        return new Response(JSON.stringify(json));
+      return fetchAndCacheRestaurants(event).then(newdata => {
+        return new Response(JSON.stringify(newdata));
       });
+
+
     })
   );
 }; // end of function
@@ -280,8 +291,9 @@ const getRestaurantById = (event, id) => {
 // Fetch and Cache Restaurants
 const fetchAndCacheRestaurants = event =>
 {
+  
     // Fetch and cache.
-    fetch(event.request)
+    return fetch(event.request)
       .then(res => res.json())
       .then(json => {
         if (!Array.isArray(json)) {
@@ -291,9 +303,10 @@ const fetchAndCacheRestaurants = event =>
         else {
           addRestaurants(json);
         } // end of else
-
+        
         return json;
       });
+  
 }; // end of function
 
 // Handle Review Restful Requests

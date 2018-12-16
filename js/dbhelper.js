@@ -30,12 +30,19 @@ var idbApplication = (function() {
             .createObjectStore("reviews", { keyPath: "id" })
             .createIndex("restaurant_id", "restaurant_id");
         case 2:
+          upgradeDB
+            .createObjectStore("pending", {keyPath: "id", autoIncrement: true});         
+      }
+        /*
+        case 2:
           upgradeDB.createObjectStore("pending", {
             keyPath: "id",
             autoIncrement: true
           });
+          
+          */
       }
-    });
+    );
 
   // Stores the Restaurant Data into IndexedDB Existing Databases
   function storeRestaurants() {
@@ -428,6 +435,35 @@ class DBHelper {
     } // end of else
   } // end of method
 
+  // Add Review Feature API Interactions
+  // Online, Offline, and Failed Fetch Support
+  // Store in local storage until the online event triggers
+  /*
+  static updateReviewAPI(restaurantID) {
+
+    // PUT URL for the RESTful endpoint
+    //let putURL = `${DBHelper.DATABASE_RESTAURANTS_URL}/${restaurantID}/?is_favorite=${is_favorite}`;
+
+    // If Not Online Place in Storage
+    if (!navigator.onLine) {
+      // Place in Local Storage for Later
+      DBHelper.storeReviewTillOnline(restaurantID, putURL);
+    } // end of if
+
+    // Update the Server
+    else {
+      return new Promise(function(resolve, reject) {
+        fetch(putURL, {method: 'PUT'})
+          .then(() => {
+            resolve(true);
+          })
+          .catch((err) => {           
+          });
+        });
+    } // end of else
+  } // end of method
+  */
+
   // Favorite Feature 
   // Store Until Online
   static storeFavoriteTillOnline(restaurantID, putURL) {
@@ -441,6 +477,22 @@ class DBHelper {
       DBHelper.moveLocalStorageToAPI();
     }); // end of event listner
   } // end of method
+
+  // New Offline Reviews
+  // Store Until Online
+  /*
+  static storeReviewTillOnline(restaurantID, putURL) {
+
+    // Place Item in Local Storage
+    localStorage.setItem(`${restaurantID}_rev`, putURL);
+
+    // add event listener for when back online
+    window.addEventListener('online', event => {
+      // get from local storage and update API
+      DBHelper.moveLocalStorageToAPI();
+    }); // end of event listner
+  } // end of method
+  */
 
   // Move Local Stored Data to PUT through Restful API
   static moveLocalStorageToAPI() {
@@ -506,22 +558,25 @@ class DBHelper {
         // Process the Review
         .then(res => {
           // Offline: Add the Review to IndexedDB pending database
-          if (res == undefined || !res.ok) {
-            // Setup Review Object for Storage
+          if (res == undefined || !res.ok || res.statusText == "Offline") {
+            
+            // Setup Review Object for Offline Pending Storage
             const pendingReview = {
               foreignKey: storedReview.id,
-              foreignStore: "reviews",
+              foreignStore: UNRESOLVED,
               method: "POST",
               url: DBHelper.DATABASE_REVIEWS_URL,
               body: review
             };
-            // Add to IndexedDB Pending
+
+            // Add to Pending IndexDB store for Online Processing
             addPending(pendingReview).then(pending => {
               callback(pending, res);
             })
             .catch(err => {
               callback(err, null);
             });
+            
           } //end of if
 
           // Online: Posted to RESTful Server

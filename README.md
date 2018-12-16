@@ -41,5 +41,16 @@ Lighthouse targets for each category exceed:
 Progressive Web App: >90
 Performance: >90
 Accessibility: >90
+-------------------------------------
+Known Issues
 
+There is an existing Google Chrome browser bug that shows an error when loading the site icon "favicon.ico" while in Offline mode (no network). The error message is shown below as seen in the console log window:
+
+:8000/favicon.ico:1 GET http://localhost:8000/favicon.ico net::ERR_INTERNET_DISCONNECTED
+An unknown error occurred when fetching the script.
+Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+
+Google Chromium team is aware and addressing the browser bug in an upcoming software update:
+https://bugs.chromium.org/p/chromium/issues/detail?id=448427#c16
+ 
 

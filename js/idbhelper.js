@@ -165,10 +165,13 @@ const processPending = () =>
                 .objectStore(UNRESOLVED);
               store.delete(pendingRequest.id);
             });
+
             // Return the Response
             return res.json();
           }) // End of First Promise Processing
           .then(entry => {
+
+            /*
             // Update the IndexedDB Again
             idbPromise.then(objStore => {
               const store = objStore
@@ -178,6 +181,8 @@ const processPending = () =>
               if (pendingRequest.method === "DELETE") return;
               store.put(entry);
             });
+            */
+
           }); // end of second promise processing
       });
     }); // end of function to process pending reviews

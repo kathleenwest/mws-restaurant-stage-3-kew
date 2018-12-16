@@ -21,10 +21,8 @@ const idbPromise = idb.open(IDB_NAME, 3, upgradeDB => {
         .createObjectStore(REVIEWS, { keyPath: "id" })
         .createIndex("restaurant_id", "restaurant_id");
     case 2:
-      upgradeDB.createObjectStore("pending", {
-        keyPath: "id",
-        autoIncrement: true
-      });
+      upgradeDB
+        .createObjectStore("pending", {keyPath: "id", autoIncrement: true});   
   }
 });
 
@@ -57,20 +55,6 @@ window.addEventListener("load", event => {
     DBHelper.processPendingDB();        
   } // end of else statement
   
-  // Pending Requests in IndexDB Notification
-  DBHelper.getPendingDB().then(pending => {
-    // Print Pending Requests if Existing
-    if (pending.length > 0) {
-      // Update HTML Review Container and Print Notification to User
-      const main = document.getElementById("maincontent");
-      const notification = document.createElement("section");
-      notification.setAttribute("class", "pending");
-      const message = document.createElement("p");
-      message.innerHTML = `Offline: ${pending.length} pending requests.`;
-      notification.appendChild(message);
-      main.appendChild(notification);
-    } // end of iff statement
-  }); // end of promise handling
 }); // end of function
 
 // Handle the Add Review Form Submit Button 
@@ -113,6 +97,7 @@ const handleFormSubmit = e => {
       DBHelper.addReview(review, (err, review) => {
         if (err && !review) {
           // Everything failed.
+          console.log("Failed to add review.");
           return;
         }
 

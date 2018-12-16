@@ -255,7 +255,7 @@ createReviewHTML = (review) => {
 
   // Set Review ID to the Next Random Number
   //var randomNumberBetween0and19999 = Math.floor(Math.random() * 20000);
-  var review_id = review.id;
+  var review_id = review.review_id;
   
   const li = document.createElement('li');
   const name = document.createElement('p');
