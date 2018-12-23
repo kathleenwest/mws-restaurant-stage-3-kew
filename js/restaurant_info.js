@@ -298,7 +298,11 @@ createReviewHTML = (review) => {
   var aria_label = document.createElement('label');
   aria_label.id = review_id + "_label";
   aria_label.className = "aria-label";
-  aria_label.innerHTML = "Rating " + review.rating + " stars. Date " + review.date + ". Reviewed By " + review.name + ". Comments: " + review.comments;
+  // Aria Date Time Announcement
+  var datelabel = new Date(updated).toDateString();
+  var timelabel = new Date(updated).toLocaleTimeString();
+
+  aria_label.innerHTML = "Rating " + review.rating + " stars. Date " + datelabel + " Time " + timelabel + ". Reviewed By " + review.name + ". Comments: " + review.comments;
 
   li.appendChild(aria_label);
 
