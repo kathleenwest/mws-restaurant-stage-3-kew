@@ -378,6 +378,15 @@ class DBHelper {
     favorite.style.background = newState
       ? `url("/icons/favorite.svg") no-repeat center`
       : `url("icons/notfavorite.svg") no-repeat center`;
+    
+    // Update the ARIA
+    const is_favorite = (restaurant["is_favorite"] && restaurant["is_favorite"].toString() === "true") ? true : false;
+    var temp_text = is_favorite
+      ? "is a favorite"
+      : "is not a favorite";
+    var aria_label = document.getElementById('favorite_label');
+    aria_label.innerHTML = "Favorite Feature: Restaurant" + restaurant.name + temp_text + "Click to change favorite status";
+  
       
     // update IndexedDB first
     idbApplication.dbPromise

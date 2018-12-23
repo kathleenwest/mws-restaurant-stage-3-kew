@@ -127,7 +127,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   restaurant_id.innerHTML = restaurant.id;
   restaurant_id.style.display == `none`;
 
-  /************** Restaruant Favorite ***************************/
+  /************** Restaurant Favorite ***************************/
   const favorite = document.getElementById('favorite-button');
   // Identification for the Favorite Button
   favorite.id = "favorite-feature-" + restaurant.id;
@@ -158,7 +158,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 // Create Restaurant Hours HTML
 fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
   const hours = document.getElementById('restaurant-hours');
-
+   
   // Loop for each operatinghours record
   for (let key in operatingHours) {
     const row = document.createElement('tr');
@@ -183,14 +183,22 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     const time = document.createElement('td');
     time.innerHTML = operatingHours[key];
     row.appendChild(time);
-    hours.appendChild(row);
 
-    // Aria Label for Row That Speaks Day + Hours
+    // Create Aria Label for Row That Speaks Day + Hours
     var aria_label = document.createElement('label');
     aria_label.id = key + "_label";
     aria_label.className = "aria-label";
-    aria_label.innerHTML = key + operatingHours[key];
-      
+    var texthours = operatingHours[key];
+    var subhours = texthours.replace("-", "to");
+    subhours = subhours.replace(",", " and ");
+    aria_label.innerHTML = key + " " + subhours;
+    // Need to get it to the DOM
+    const hourslabels = document.getElementById('restaurant-hours-labels'); 
+    hourslabels.appendChild(aria_label);
+    //aria_label.innerHTML = key + operatingHours[key];
+
+    
+    hours.appendChild(row);     
   } // end of loop for each record
 } //  end of function
 
