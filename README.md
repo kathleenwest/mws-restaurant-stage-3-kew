@@ -1,4 +1,7 @@
 # mws-restaurant-stage-3-kew
+
+Project Blog Article: https://portfolio.katiegirl.net/2018/12/16/restaurant-reviews-app-stage-3/
+
 -----------------------------
 Stage 3 Notes:
 -------------------------------------
